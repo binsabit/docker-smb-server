@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  smb-server:
+    build: .
+    container_name: smb-server
+    restart: unless-stopped
+    ports:
+      - "4000:139"
+      - "4001:445"
+    volumes:
+      - ./shared:/shared
+      - smb-data:/var/lib/samba
+    environment:
+      - SMB_USER=smbuser
+      - SMB_PASSWORD=password
+      - SMB_GROUP=smbgroup
+    networks:
+      - smb-network
+    privileged: true
+
+volumes:
+  smb-data:
+    driver: local
+
+networks:
+  smb-network:
+    driver: bridge
